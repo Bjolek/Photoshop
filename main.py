@@ -1,4 +1,4 @@
-from PIL import Image
+from PIL import Image, ImageFilter
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QImage
 from PyQt5.QtWidgets import *
@@ -112,7 +112,27 @@ class WorkPhoto:
         self.image = self.image.transpose(Image.ROTATE_270)
         self.showImage()
 
+    def mirror(self):
+        if self.image:
+            self.image = self.image.transpose(Image.FLIP_LEFT_RIGHT)
+            self.showImage()
+
+    def apply_sharpness(self):
+        if self.image:
+            factor = 2.0
+            self.image = self.image.filter(ImageFilter.SHARPEN(factor))
+            self.showImage()
+
+    def convert_to_bw(self):
+        if self.image:
+            self.image = self.image.convert("L").convert("RGBA")
+            self.showImage()
+
+
+
+
 workwithphoto = WorkPhoto()
+
 
 def open_folder():
     workwithphoto.folder=QFileDialog.getExistingDirectory()
@@ -130,6 +150,10 @@ text.currentRowChanged.connect(showChosenImage)
 mono1.clicked.connect(open_folder)
 mono2.clicked.connect(workwithphoto.rotate_left)
 mono3.clicked.connect(workwithphoto.rotate_right)
+mono4.clicked.connect(workwithphoto.mirror)
+mono5.clicked.connect(workwithphoto.apply_sharpness)
+mono6.clicked.connect(workwithphoto.convert_to_bw)
+
 
 window.setLayout(mainLine)
 
