@@ -72,6 +72,11 @@ mono3 = QPushButton("Вправо")
 mono4 = QPushButton("Дзеркало")
 mono5 = QPushButton("Різкість")
 mono6 = QPushButton("Ч/Б")
+mono7 = QPushButton("Блюр")
+mono8 = QPushButton("Накладання контурів")
+mono9 = QPushButton("Контрасність")
+
+
 text = QListWidget()
 
 Mon = QVBoxLayout()
@@ -86,6 +91,11 @@ Non.addWidget(mono3)
 Non.addWidget(mono4)
 Non.addWidget(mono5)
 Non.addWidget(mono6)
+Non.addWidget(mono7)
+Non.addWidget(mono8)
+Non.addWidget(mono9)
+
+
 Mon1.addLayout(Non)
 mainLine.addLayout(Mon1)
 
@@ -119,8 +129,7 @@ class WorkPhoto:
 
     def apply_sharpness(self):
         if self.image:
-            factor = 2.0
-            self.image = self.image.filter(ImageFilter.SHARPEN(factor))
+            self.image = self.image.filter(ImageFilter.SHARPEN)
             self.showImage()
 
     def convert_to_bw(self):
@@ -128,8 +137,23 @@ class WorkPhoto:
             self.image = self.image.convert("L").convert("RGBA")
             self.showImage()
 
+    def apply_blur(self):
+        if self.image:
+            self.image = self.image.filter(ImageFilter.BLUR)
+            self.showImage()
 
+    def apply_contours(self):
+        if self.image:
+            self.image = self.image.filter(ImageFilter.CONTOUR)
+            self.showImage()
 
+    def adjust_contrast(self):
+        if self.image:
+            # You can adjust the contrast factor as needed (e.g., 1.5 for increased contrast)
+            contrast_factor = 1.5
+            enhancer = ImageEnhance.Contrast(self.image)
+            self.image = enhancer.enhance(contrast_factor)
+            self.showImage()
 
 workwithphoto = WorkPhoto()
 
@@ -145,6 +169,8 @@ def showChosenImage():
     workwithphoto.load()
     workwithphoto.showImage()
 
+
+
 text.currentRowChanged.connect(showChosenImage)
 
 mono1.clicked.connect(open_folder)
@@ -153,6 +179,12 @@ mono3.clicked.connect(workwithphoto.rotate_right)
 mono4.clicked.connect(workwithphoto.mirror)
 mono5.clicked.connect(workwithphoto.apply_sharpness)
 mono6.clicked.connect(workwithphoto.convert_to_bw)
+mono7.clicked.connect(workwithphoto.apply_blur)
+mono8.clicked.connect(workwithphoto.apply_contours)
+mono9.clicked.connect(workwithphoto.adjust_contrast)
+
+
+
 
 
 window.setLayout(mainLine)
